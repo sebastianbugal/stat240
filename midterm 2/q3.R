@@ -2,8 +2,9 @@ library(twitteR)
 library(stringr)
 library(tm)
 
-load(file = 'translink.Rdata')
-s = data[[2]]$created
+load(file = 'translink.RData')
+s = data[[2]]$text
+s=tolower(s)
 s
 s=gsub('/',' ',s)
 s[[1]]
@@ -16,6 +17,8 @@ m = gregexpr(' \\d+ | \\d+ \\d+', s)
 x = regmatches(s, m)
 x = trimws(x[[1]])
 x
+
+
 translink = function(year, month, day, hour){
   load(file = 'translink.Rdata')
   curtweet=NULL
@@ -35,6 +38,7 @@ translink = function(year, month, day, hour){
     print("Error 4: Invalid value for hour(values between 0 and 24)")
     return(NULL)
   }
+  
   for(i in data){
     splt_i=strsplit(as.character(i$created),"-| |:")
     if(as.integer(splt_i[[1]][1])==year & 
@@ -43,17 +47,28 @@ translink = function(year, month, day, hour){
        as.integer(splt_i[[1]][4])==hour){
         curtweet=c(curtweet,i)
     }
-    
   }
+  
   for(i in curtweet){
+    i$text=tolower(i$text)
     i$text=gsub('/',' ',i$text)
     if(str_detect(i$text,"detour") & 
        str_detect(i$text,"clear",negate=TRUE)& str_detect(i$text," over",negate=TRUE)){
       print("detour")
+      i_splt_regroute=strsplit(i$text, "regular route")
+      m = gregexpr(' \\d+ | \\d+ \\d+', i_splt_regroute[[1]][1])
+      x = regmatches(i_splt_regroute[[1]][1], m)
+      x = trimws(x[[1]])
+      print(x)
       print(i$text)
     }
     else{
       print("detour cleared")
+      i_splt_regroute=strsplit(i$text, "regular route")
+      m = gregexpr(' \\d+ | \\d+ \\d+', i_splt_regroute[[1]][1])
+      x = regmatches(i_splt_regroute[[1]][1], m)
+      x = trimws(x[[1]])
+      print(x)
       print(i$text)
     }
   }
