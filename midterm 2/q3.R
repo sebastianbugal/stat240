@@ -7,8 +7,6 @@ s = data[[8]]$text
 s
 s=gsub('/',' ',s)
 s[[1]]
-a=strsplit(s," |/")
-a[1]
 
 m = gregexpr(' \\d+ | \\d+ \\d+', s)
 x = regmatches(s, m)
