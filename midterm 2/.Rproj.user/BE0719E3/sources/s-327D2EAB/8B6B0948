@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1582778158928.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8B6B0948",
+    "lastKnownWriteTime" : 1582777823,
+    "last_content_update" : 1582778158928,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "id" : "d5c69356a99a4caa8e954d08b953e88c",
+        "name" : "dbcon",
+        "title" : "dbcon"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "object_explorer"
+}
