@@ -2,17 +2,19 @@ library(twitteR)
 library(stringr)
 
 load(file = 'translink.Rdata')
-s = data[[1]]$text
+s = data[[2]]$text
 
 s[[1]]
+a=strsplit(s," |/")
+a[1]
 
-
-m = gregexpr(' \\d+ ', s)
+m = gregexpr(' \\d+ | [:/:]d+', s)
 x = regmatches(s, m)
 x = trimws(x[[1]])
 x
 translink = function(year, month, day, hour){
   load(file = 'translink.Rdata')
+  curtweet=NULL
   if(year<0){
     print("Error 1: Invalid value for year")
     return(NULL)
@@ -32,8 +34,9 @@ translink = function(year, month, day, hour){
   for(i in data){
     splt_i=strsplit(as.character(i$created),"-| |:")
     if(as.integer(splt_i[[1]][1])==year & as.integer(splt_i[[1]][2])==month &as.integer(splt_i[[1]][3])==day & as.integer(splt_i[[1]][4])==hour){
-      print(i$text)
+      curtweet=i
     }
   }
+  
 }
 translink(2020,02,23,16)
