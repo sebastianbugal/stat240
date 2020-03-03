@@ -73,6 +73,7 @@ translink = function(year, month, day, hour){
       x = trimws(x[[1]])
 
       start=c(start,as.integer(x))
+      
       print(x)
       print(i$text)
     }
@@ -84,14 +85,15 @@ translink = function(year, month, day, hour){
       x = regmatches(i_splt_regroute[[1]][1], m)
       x = trimws(x[[1]])
       stop=c(stop,as.integer(x))
+      
+      
       print(x)
       print(i$text)
     }
   }
+  stop=stop[!is.na(stop)]
+  start=start[!is.na(start)]
   returning=list(start=start,stop=stop)
-  # returning= cbind.data.frame(start,stop)
-  # returning$start=unique(returning$start)
-  # returning$stop=unique(returning$stop)
   return(returning)
 
 }
@@ -100,8 +102,8 @@ A=translink(2020,02,01,21)#over check
 A
 B=translink(2020,02,02,20)#cloverdale
 B$start
-C=translink(2020,01,26,03)#3 at a time
+C=translink(2020,1,26,3)#3 at a time
 names(C)
-C$start
+C$stop
 A=translink(2020,02,23,15)#multiple nums
-A$stop
+A$start

@@ -2,8 +2,6 @@ library(RSQLite)
 library(DBI)
 dbcon = dbConnect(SQLite(), dbname="stat240.sqlite")
 names(dbReadTable(dbcon, "citiesP"))
-
-
 query="SELECT  DISTINCT rank2016, rank2011,name  FROM citiesP "
 a=dbGetQuery(dbcon, query)
 nrow(a)
