@@ -17,6 +17,7 @@ a[[1]][1]
 m = gregexpr(' \\d+ | \\d+ \\d+', s)
 m
 x = regmatches(s, m)
+x
 x = trimws(x[[1]])
 x
 as.integer(x)[2]
@@ -66,9 +67,11 @@ translink = function(year, month, day, hour){
       print("detour")
       
       i_splt_regroute=strsplit(i$text, "regular route")
-      m = gregexpr(' \\d+ | \\d+ \\d+', i_splt_regroute[[1]][1])
+      m = gregexpr(' \\d+ | \\d+ \\d+ ', i_splt_regroute[[1]][1])
       x = regmatches(i_splt_regroute[[1]][1], m)
+      
       x = trimws(x[[1]])
+
       start=c(start,as.integer(x))
       print(x)
       print(i$text)
@@ -76,9 +79,8 @@ translink = function(year, month, day, hour){
     
     else{
       print("detour cleared")
-      
       i_splt_regroute=strsplit(i$text, "regular route")
-      m = gregexpr(' \\d+ | \\d+ \\d+', i_splt_regroute[[1]][1])
+      m = gregexpr(' \\d+ | \\d+ \\d+ ', i_splt_regroute[[1]][1])
       x = regmatches(i_splt_regroute[[1]][1], m)
       x = trimws(x[[1]])
       stop=c(stop,as.integer(x))
@@ -86,13 +88,20 @@ translink = function(year, month, day, hour){
       print(i$text)
     }
   }
-  
-  returning= as.data.frame(start,stop)
+  returning=list(start=start,stop=stop)
+  # returning= cbind.data.frame(start,stop)
+  # returning$start=unique(returning$start)
+  # returning$stop=unique(returning$stop)
   return(returning)
 
 }
+
 A=translink(2020,02,01,21)#over check
+A
 B=translink(2020,02,02,20)#cloverdale
+B$start
 C=translink(2020,01,26,03)#3 at a time
-C$stop
-translink(2020,02,23,15)#multiple nums
+names(C)
+C$start
+A=translink(2020,02,23,15)#multiple nums
+A$stop
