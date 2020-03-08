@@ -3,7 +3,7 @@ library(stringr)
 library(tm)
 
 load(file = 'translink.RData')
-s = data[[2]]$text
+s = data[[44]]$created
 s=tolower(s)
 s
 s=gsub('/',' ',s)
@@ -59,40 +59,46 @@ translink = function(year, month, day, hour){
     
     i$text=tolower(i$text)
     i$text=gsub('/','  ',i$text)
-    
+    i$text=paste0(' ',i$text)
     if(str_detect(i$text,"detour") & 
+       str_detect(i$text,"#rideralert")&
        str_detect(i$text,"clear",negate=TRUE)& 
-       str_detect(i$text," over",negate=TRUE)){
+       str_detect(i$text," over",negate=TRUE)&
+       str_detect(i$text,"ended",negate=TRUE)&
+       str_detect(i$text,"delays",negate=TRUE)){
       
       print("detour")
       
-      i_splt_regroute=strsplit(i$text, "regular route")
+      i_splt_regroute=strsplit(i$text, "regular route|delays")
       # m = gregexpr(' \\d+ | \\d+ \\d+ ', i_splt_regroute[[1]][1])
       # m = gregexpr('(/| |)\d+(/| )', i_splt_regroute[[1]][1])
-      m = gregexpr(' \\d+ ', i_splt_regroute[[1]][1])
+      m = gregexpr(' \\d+ | [nr]\\d+ ', i_splt_regroute[[1]][1])
       
 
       x = regmatches(i_splt_regroute[[1]][1], m)
       
       x = trimws(x[[1]])
       x=removePunctuation(x)
-      start=c(start,as.integer(x))
+      start=c(start,x)
       
       print(x)
       print(i$text)
     }
     
-    else{
+    else if(str_detect(i$text,"#rideralert")&
+            (str_detect(i$text,"detour") & 
+             str_detect(i$text,"clear")|
+             str_detect(i$text," over")|
+             str_detect(i$text,"ended"))|
+            str_detect(i$text,"delays")){
       print("detour cleared")
-      i_splt_regroute=strsplit(i$text, "regular route")
-      m = gregexpr(' \\d+ ', i_splt_regroute[[1]][1])
+      i_splt_regroute=strsplit(i$text, "regular route|delays")
+      m = gregexpr(' \\d+ | [nr]\\d+ ', i_splt_regroute[[1]][1])
       x = regmatches(i_splt_regroute[[1]][1], m)
       x = trimws(x[[1]])
       x=removePunctuation(x)
       
-      stop=c(stop,as.integer(x))
-      
-      
+      stop=c(stop,x)
       
       print(x)
       print(i$text)
@@ -101,9 +107,11 @@ translink = function(year, month, day, hour){
   }
   stop=stop[!is.na(stop)]
   start=start[!is.na(start)]
+  start=unique(start)
+  stop=unique(stop)
+  
   returning=list(start=start,stop=stop)
   return(returning)
-
 }
 
 
@@ -118,3 +126,17 @@ names(C)
 C
 A=translink(2020,02,23,15)#multiple nums
 A$start
+
+translink(2020,02,12,19)
+translink(2020,02,12,20)
+translink(2020,01,26,04)
+translink(2020,02,23,05)
+translink(2020,02,22,17)
+translink(2020,02,22,03)
+translink(2020,02,22,01)
+
+
+
+
+
+
