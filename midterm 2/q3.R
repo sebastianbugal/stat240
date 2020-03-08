@@ -14,7 +14,7 @@ str_detect(s,"clear",negate=TRUE)
 a=strsplit(s," |/")
 a[[1]][1]
 
-m = gregexpr(' \\d+ | \\d+ \\d+', s)
+m = gregexpr(' \\d+ |(/| )\\d+(/| )', s)
 m
 x = regmatches(s, m)
 x
@@ -58,7 +58,7 @@ translink = function(year, month, day, hour){
   for(i in curtweet){
     
     i$text=tolower(i$text)
-    i$text=gsub('/',' ',i$text)
+    i$text=gsub('/','  ',i$text)
     
     if(str_detect(i$text,"detour") & 
        str_detect(i$text,"clear",negate=TRUE)& 
@@ -67,11 +67,15 @@ translink = function(year, month, day, hour){
       print("detour")
       
       i_splt_regroute=strsplit(i$text, "regular route")
-      m = gregexpr(' \\d+ | \\d+ \\d+ ', i_splt_regroute[[1]][1])
+      # m = gregexpr(' \\d+ | \\d+ \\d+ ', i_splt_regroute[[1]][1])
+      # m = gregexpr('(/| |)\d+(/| )', i_splt_regroute[[1]][1])
+      m = gregexpr(' \\d+ ', i_splt_regroute[[1]][1])
+      
+
       x = regmatches(i_splt_regroute[[1]][1], m)
       
       x = trimws(x[[1]])
-
+      x=removePunctuation(x)
       start=c(start,as.integer(x))
       
       print(x)
@@ -81,15 +85,19 @@ translink = function(year, month, day, hour){
     else{
       print("detour cleared")
       i_splt_regroute=strsplit(i$text, "regular route")
-      m = gregexpr(' \\d+ | \\d+ \\d+ ', i_splt_regroute[[1]][1])
+      m = gregexpr(' \\d+ ', i_splt_regroute[[1]][1])
       x = regmatches(i_splt_regroute[[1]][1], m)
       x = trimws(x[[1]])
+      x=removePunctuation(x)
+      
       stop=c(stop,as.integer(x))
+      
       
       
       print(x)
       print(i$text)
     }
+    print(i$text)
   }
   stop=stop[!is.na(stop)]
   start=start[!is.na(start)]
@@ -98,12 +106,15 @@ translink = function(year, month, day, hour){
 
 }
 
+
 A=translink(2020,02,01,21)#over check
 A
 B=translink(2020,02,02,20)#cloverdale
 B$start
+x=translink(2020,2,23,3)
+x
 C=translink(2020,1,26,3)#3 at a time
 names(C)
-C$stop
+C
 A=translink(2020,02,23,15)#multiple nums
 A$start
